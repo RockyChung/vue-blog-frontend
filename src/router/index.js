@@ -5,12 +5,16 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/Login.vue') // 懶加載登入頁
+    component: () => import('@/views/Login.vue'), // 懶加載登入頁
+    // (選用) 標記這個頁面是「遊客」專用的，登入過的人不需要再來
+    meta: { guestOnly: true }
   },
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Home.vue') // 假設之後有個首頁
+    component: () => import('@/views/Home.vue'), // 假設之後有個首頁
+    // ★★★ 關鍵設定：標記這個頁面需要權限 ★★★
+    meta: { requiresAuth: true }
   }
 ]
 
@@ -18,5 +22,29 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+// --- 👮‍♂️ 路由守衛 (Router Guard) 開始 ---
+router.beforeEach((to, from, next) => {
+  // 1. 每次換頁前，先去皮夾看看有沒有 Token
+  const token = localStorage.getItem('token')
+
+  // 2. 判斷邏輯
+  if (to.meta.requiresAuth && !token) {
+    // 情況 A：要去「需要權限」的頁面 (如首頁)，但身上「沒有 Token」
+    // -> 擋下來，踢去登入頁
+    alert('請先登入！') // (選用) 跳個提示比較友善
+    next('/login')
+  
+  } else if (to.meta.guestOnly && token) {
+    // 情況 B：(選用) 已經登入了，還想去登入頁
+    // -> 不需要，直接送去首頁
+    next('/')
+    
+  } else {
+    // 情況 C：符合規則，放行！
+    next()
+  }
+})
+// --- 路由守衛結束 ---
 
 export default router
