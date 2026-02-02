@@ -37,30 +37,38 @@ const loginForm = reactive({
 })
 
 const handleLogin = async () => {
+  // 1. 基本檢查：如果沒打帳號密碼，就罵人(誤)，顯示錯誤訊息
   if (!loginForm.username || !loginForm.password) {
     errorMessage.value = '請輸入帳號密碼'
     return
   }
 
+  // 2. 開啟 Loading 效果 (按鈕變灰，避免使用者連點)
   loading.value = true
   errorMessage.value = ''
 
   try {
     // 呼叫後端 API
+    // 3. 【關鍵動作】呼叫 API
+    // 這裡會執行我們在 api/auth.js 寫的方法，發送 POST 給 Spring Boot
     const res = await login(loginForm)
     
     // 假設後端回傳結構是 { code: 200, data: { token: '...' } }
     // 如果您的結構不同，請根據 console.log(res) 調整這裡
+    // 4. 判斷後端回傳結果
     if (res.code === 200) {
+      // --- 成功的情況 ---
       const token = res.data.token
-      // 1. 存 Token
+      // 存 Token
       localStorage.setItem('token', token)
-      // 2. 存使用者名稱 (選用)
+      // 存使用者名稱 (選用)
       localStorage.setItem('username', res.data.username)
       
-      // 3. 跳轉到首頁
+      // 5. 導航到首頁
       router.push('/')
     } else {
+      // --- 失敗的情況 (例如帳密錯誤) ---
+      // 顯示後端回傳的錯誤訊息 (res.message)
       errorMessage.value = res.message || '登入失敗'
     }
   } catch (error) {
