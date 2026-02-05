@@ -32,11 +32,19 @@ service.interceptors.response.use(
   },
   error => {
     console.error('請求錯誤:', error)
-    // 如果是 401 (權限不足)，就踢回登入頁
-    if (error.response && error.response.status === 401) {
-        localStorage.removeItem('token')
-        // 這裡建議依您的路由設定調整，通常是導回 /login
-        // location.href = '/login' 
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          // 401 (權限不足)，就踢回登入頁
+          localStorage.removeItem('token')
+          // 這裡建議依您的路由設定調整，通常是導回 /login
+          // location.href = '/login'
+          break
+        case 403:
+          // 403 (禁止訪問)，通常是權限不夠，或後端有安全設定 (如 CSRF)
+          console.error('收到 403 Forbidden 錯誤。您可能沒有權限訪問此資源，或請檢查後端 CORS、CSRF 安全設定。')
+          break
+      }
     }
     return Promise.reject(error)
   }

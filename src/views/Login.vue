@@ -17,6 +17,10 @@
         {{ loading ? '登入中...' : '登入' }}
       </button>
 
+      <p class="register-link">
+        還沒有帳號？<router-link to="/register">點此註冊</router-link>
+      </p>
+
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </div>
   </div>
@@ -63,6 +67,8 @@ const handleLogin = async () => {
       localStorage.setItem('token', token)
       // 存使用者名稱 (選用)
       localStorage.setItem('username', res.data.username)
+      // 如果後端有回傳 nickname，也一併儲存
+      if (res.data.nickname) localStorage.setItem('nickname', res.data.nickname)
       
       // 5. 導航到首頁
       router.push('/')
@@ -125,4 +131,17 @@ button:hover { background-color: #3aa876; }
 button:disabled { background-color: #ccc; cursor: not-allowed; }
 
 .error { color: red; margin-top: 10px; font-size: 14px; }
+
+.register-link {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+.register-link a {
+  color: #42b983;
+  text-decoration: none;
+}
+.register-link a:hover {
+  text-decoration: underline;
+}
 </style>

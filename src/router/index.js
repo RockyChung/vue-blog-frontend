@@ -10,6 +10,12 @@ const routes = [
     meta: { guestOnly: true }
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/Register.vue'), // 懶加載註冊頁
+    meta: { guestOnly: true }
+  },
+  {
     path: '/',
     name: 'Home',
     component: () => import('@/views/Home.vue'), // 假設之後有個首頁
