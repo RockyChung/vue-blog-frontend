@@ -20,7 +20,8 @@ const routes = [
     name: 'Home',
     component: () => import('@/views/Home.vue'), // 假設之後有個首頁
     // ★★★ 關鍵設定：標記這個頁面需要權限 ★★★
-    meta: { requiresAuth: true }
+    // ❌ 原本有這行，請刪掉或註解掉 開放訪問首頁Home.vue
+    // meta: { requiresAuth: true }
   }
 ]
 
