@@ -1,8 +1,8 @@
 <template>
-  <div class="login-container">
-    <div class="card">
-      <h2>VueBlog 登入</h2>
+  <div class="auth-content">
+    <h2 class="section-title">登入</h2>
       
+    <div class="auth-form">
       <div class="form-group">
         <label>帳號</label>
         <input type="text" v-model="loginForm.username" placeholder="請輸入帳號" @keyup.enter="handleLogin" />
@@ -13,7 +13,7 @@
         <input type="password" v-model="loginForm.password" placeholder="請輸入密碼" @keyup.enter="handleLogin" />
       </div>
 
-      <button @click="handleLogin" :disabled="loading">
+      <button @click="handleLogin" :disabled="loading" class="action-btn">
         {{ loading ? '登入中...' : '登入' }}
       </button>
 
@@ -29,7 +29,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { login } from '@/api/auth' // 引入我們寫好的 API
+import { login } from '@/api/auth'
 
 const router = useRouter()
 const loading = ref(false)
@@ -41,40 +41,25 @@ const loginForm = reactive({
 })
 
 const handleLogin = async () => {
-  // 1. 基本檢查：如果沒打帳號密碼，就罵人(誤)，顯示錯誤訊息
   if (!loginForm.username || !loginForm.password) {
     errorMessage.value = '請輸入帳號密碼'
     return
   }
 
-  // 2. 開啟 Loading 效果 (按鈕變灰，避免使用者連點)
   loading.value = true
   errorMessage.value = ''
 
   try {
-    // 呼叫後端 API
-    // 3. 【關鍵動作】呼叫 API
-    // 這裡會執行我們在 api/auth.js 寫的方法，發送 POST 給 Spring Boot
     const res = await login(loginForm)
     
-    // 假設後端回傳結構是 { code: 200, data: { token: '...' } }
-    // 如果您的結構不同，請根據 console.log(res) 調整這裡
-    // 4. 判斷後端回傳結果
     if (res.code === 200) {
-      // --- 成功的情況 ---
       const token = res.data.token
-      // 存 Token
       localStorage.setItem('token', token)
-      // 存使用者名稱 (選用)
       localStorage.setItem('username', res.data.username)
-      // 如果後端有回傳 nickname，也一併儲存
       if (res.data.nickname) localStorage.setItem('nickname', res.data.nickname)
       
-      // 5. 導航到首頁
       router.push('/')
     } else {
-      // --- 失敗的情況 (例如帳密錯誤) ---
-      // 顯示後端回傳的錯誤訊息 (res.message)
       errorMessage.value = res.message || '登入失敗'
     }
   } catch (error) {
@@ -87,58 +72,66 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f0f2f5;
+/* 統一使用 Home.vue 的風格 */
+.section-title { 
+  font-size: 42px; 
+  font-weight: 900; 
+  margin: 0 0 40px 0; 
+  color: #000; 
 }
 
-.card {
-  width: 350px;
-  padding: 30px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  text-align: center;
+.auth-form {
+  max-width: 400px; /* 限制寬度，保持美觀 */
 }
 
-h2 { margin-bottom: 20px; color: #333; }
-
-.form-group { margin-bottom: 15px; text-align: left; }
-.form-group label { display: block; margin-bottom: 5px; color: #666; font-size: 14px; }
+.form-group { margin-bottom: 25px; }
+.form-group label { 
+  display: block; 
+  margin-bottom: 8px; 
+  color: #000; 
+  font-weight: bold; 
+  font-size: 14px; 
+}
 input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box; /* 重要：防止 padding 撐大寬度 */
+  padding: 12px 0;
+  border: none;
+  border-bottom: 2px solid #eee; /* 改用底線風格 */
+  background: transparent;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+input:focus {
+  border-bottom-color: #000;
 }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #42b983;
-  color: white;
+/* 按鈕風格統一 */
+.action-btn {
+  background: #000;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  padding: 12px 36px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 20px;
+  transition: background 0.3s;
 }
-button:hover { background-color: #3aa876; }
-button:disabled { background-color: #ccc; cursor: not-allowed; }
+.action-btn:hover { background: #333; }
+.action-btn:disabled { background: #ccc; cursor: not-allowed; }
 
 .error { color: red; margin-top: 10px; font-size: 14px; }
 
 .register-link {
-  margin-top: 20px;
+  margin-top: 30px;
   font-size: 14px;
   color: #666;
 }
 .register-link a {
-  color: #42b983;
+  color: #000;
+  font-weight: bold;
   text-decoration: none;
 }
 .register-link a:hover {

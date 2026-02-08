@@ -3,25 +3,40 @@ import { createRouter, createWebHistory } from 'vue-router'
 // 定義路由表
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/Login.vue'), // 懶加載登入頁
-    // (選用) 標記這個頁面是「遊客」專用的，登入過的人不需要再來
-    meta: { guestOnly: true }
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import('@/views/Register.vue'), // 懶加載註冊頁
-    meta: { guestOnly: true }
-  },
-  {
     path: '/',
-    name: 'Home',
-    component: () => import('@/views/Home.vue'), // 假設之後有個首頁
-    // ★★★ 關鍵設定：標記這個頁面需要權限 ★★★
-    // ❌ 原本有這行，請刪掉或註解掉 開放訪問首頁Home.vue
-    // meta: { requiresAuth: true }
+    component: () => import('@/views/Layout.vue'), // 使用新的佈局組件
+    children: [
+      {
+        path: '', // 當網址是 / 時，顯示 Home
+        name: 'Home',
+        component: () => import('@/views/Home.vue')
+      },
+      {
+        path: 'about', // 當網址是 /about 時，顯示 About
+        name: 'About',
+        component: () => import('@/views/About.vue')
+      }
+    ]
+  },
+  // --- 後台路由區塊 (Admin) ---
+  {
+    path: '/admin',
+    component: () => import('@/views/admin/AdminLayout.vue'),
+    meta: { requiresAuth: true }, // 進入此區塊需要登入
+    children: [
+      {
+        path: '',
+        name: 'AdminDashboard',
+        component: () => import('@/views/admin/Dashboard.vue')
+      }
+      // 未來可以在這裡新增 'articles', 'settings' 等子路由
+    ]
+  },
+  {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/admin/Login.vue'),
+        meta: { guestOnly: true }
   }
 ]
 
