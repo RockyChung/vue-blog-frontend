@@ -2,7 +2,7 @@
   <div class="home-content">
       <div class="action-bar">
         <h2 class="section-title">最新文章</h2>
-        <button class="create-btn">New Post</button>
+        <!-- <button class="create-btn">New Post</button> -->
       </div>
 
       <div v-if="loading" class="loading">載入中...</div>
@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getArticleList } from '@/api/article' // 引入剛剛寫的 API
+import { getArticleList } from '@/api/web/article' // 引入剛剛寫的 API
 
 const articles = ref([]) // 用來存文章資料
 const loading = ref(true)

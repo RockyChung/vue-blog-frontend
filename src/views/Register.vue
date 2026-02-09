@@ -34,7 +34,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { register } from '@/api/auth' // 假設您有這個 API
+import { register } from '@/api/admin/auth' // 假設您有這個 API
 
 const router = useRouter()
 const loading = ref(false)

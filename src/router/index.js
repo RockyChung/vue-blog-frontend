@@ -27,15 +27,20 @@ const routes = [
       {
         path: '',
         name: 'AdminDashboard',
-        component: () => import('@/views/admin/Dashboard.vue')
-      }
+        component: () => import('@/views/admin/AdminDashboard.vue')
+      },
       // 未來可以在這裡新增 'articles', 'settings' 等子路由
+      {
+        path: '/admin/AdminArticles',
+        name: 'AdminArticles',
+        component: () => import('@/views/admin/AdminArticles.vue')
+      }
     ]
   },
   {
-        path: '/login',
+        path: '/admin/login',
         name: 'Login',
-        component: () => import('@/views/admin/Login.vue'),
+        component: () => import('@/views/admin/AdminLogin.vue'),
         meta: { guestOnly: true }
   }
 ]
@@ -55,12 +60,12 @@ router.beforeEach((to, from, next) => {
     // 情況 A：要去「需要權限」的頁面 (如首頁)，但身上「沒有 Token」
     // -> 擋下來，踢去登入頁
     alert('請先登入！') // (選用) 跳個提示比較友善
-    next('/login')
+    next('/admin/login')
   
   } else if (to.meta.guestOnly && token) {
     // 情況 B：(選用) 已經登入了，還想去登入頁
     // -> 不需要，直接送去首頁
-    next('/')
+    next('/admin')
     
   } else {
     // 情況 C：符合規則，放行！

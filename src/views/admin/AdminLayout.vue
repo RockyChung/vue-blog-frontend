@@ -9,7 +9,7 @@
         <router-link to="/admin" class="nav-item" exact-active-class="active">
           📊 儀表板
         </router-link>
-        <router-link to="/admin/articles" class="nav-item" active-class="active">
+        <router-link to="/admin/AdmArticles" class="nav-item" active-class="active">
           📝 文章管理
         </router-link>
         
@@ -45,7 +45,7 @@ const handleLogout = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('username')
   localStorage.removeItem('nickname')
-  router.push('/login')
+  router.push('/admin/login')
 }
 </script>
 
