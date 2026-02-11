@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 登入 API
 export function login(data) {
   return request({
-    url: '/api/adm/auth/login',
+    url: '/api/admin/auth/login',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function login(data) {
 // 註冊
 export function register(data) {
   return request({
-    url: '/api/adm/auth/register',
+    url: '/api/admin/auth/register',
     method: 'post',
     data
   })

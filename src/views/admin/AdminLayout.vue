@@ -9,7 +9,7 @@
         <router-link to="/admin" class="nav-item" exact-active-class="active">
           📊 儀表板
         </router-link>
-        <router-link to="/admin/AdmArticles" class="nav-item" active-class="active">
+        <router-link to="/admin/AdminArticles" class="nav-item" active-class="active">
           📝 文章管理
         </router-link>
         
